@@ -16,11 +16,13 @@ fi
 
 [[ -f "${ROOT_DIR}/daemon/app.js" ]] || fail "missing daemon app.js"
 [[ -f "${ROOT_DIR}/web/public/index.html" ]] || fail "missing index.html"
-[[ -f "${ROOT_DIR}/web/public/assets/index-eb756f13.js" ]] || fail "missing frontend index bundle"
-[[ -f "${ROOT_DIR}/web/public/assets/mount-cffdab00.js" ]] || fail "missing frontend mount bundle"
+INDEX_BUNDLE="$(find_panel_index_bundle "${ROOT_DIR}")"
+MOUNT_BUNDLE="$(find_panel_mount_bundle "${ROOT_DIR}")"
+[[ -n "${INDEX_BUNDLE}" ]] || fail "missing frontend index bundle"
+[[ -n "${MOUNT_BUNDLE}" ]] || fail "missing frontend mount bundle"
 
 grep -q 'whitelist.json' "${ROOT_DIR}/daemon/app.js" || fail "daemon patch marker missing"
-grep -q 'common/whitelist.json' "${ROOT_DIR}/web/public/assets/mount-cffdab00.js" || fail "frontend patch marker missing"
+grep -q 'common/whitelist.json' "${MOUNT_BUNDLE}" || fail "frontend patch marker missing"
 
 systemctl is-active --quiet "$(service_name_web)" || fail "web service inactive"
 systemctl is-active --quiet "$(service_name_daemon)" || fail "daemon service inactive"

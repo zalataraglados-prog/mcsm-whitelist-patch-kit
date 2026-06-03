@@ -140,3 +140,13 @@ ensure_runtime_tools() {
   require_cmd tar
   require_cmd systemctl
 }
+
+find_panel_index_bundle() {
+  local root="$1"
+  ls -1 "${root}/web/public/assets"/index-*.js 2>/dev/null | head -n 1
+}
+
+find_panel_mount_bundle() {
+  local root="$1"
+  ls -1 "${root}/web/public/assets"/mount-*.js 2>/dev/null | head -n 1
+}
