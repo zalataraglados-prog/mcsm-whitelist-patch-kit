@@ -1,0 +1,22 @@
+{
+  "patch_id": "mcsm-whitelist-table",
+  "patch_version": "0.1.0",
+  "target_panel_version": "10.16.1",
+  "target_daemon_version": "4.16.1",
+  "payload_dir": "payload/v10.16.1",
+  "payload_archive": "mcsm-whitelist-patch-v10.16.1.tar.gz",
+  "services": {
+    "web": "mcsm-web.service",
+    "daemon": "mcsm-daemon.service"
+  },
+  "repo": {
+    "github": "__FILL_GITHUB_REPO__",
+    "tag": "__FILL_RELEASE_TAG__"
+  },
+  "files": [
+    "daemon/app.js",
+    "daemon/app.js.map",
+    "web/public/index.html",
+    "web/public/assets"
+  ]
+}
