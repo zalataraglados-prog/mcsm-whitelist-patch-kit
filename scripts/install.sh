@@ -9,9 +9,9 @@ if [[ ! -f "${REPO_ROOT}/patch-manifest.json" ]]; then
   TMP_DIR="$(mktemp -d)"
   trap 'rm -rf "${TMP_DIR}"' EXIT
   cd "${TMP_DIR}"
-  curl -fsSL "__FILL_RAW_INSTALL_URL__" -o install.sh
-  chmod +x install.sh
-  exec bash "${TMP_DIR}/install.sh" "$@"
+  curl -fsSL "https://github.com/zalataraglados-prog/mcsm-whitelist-patch-kit/archive/refs/heads/main.tar.gz" -o repo.tar.gz
+  tar -xzf repo.tar.gz
+  exec bash "${TMP_DIR}/mcsm-whitelist-patch-kit-main/scripts/install.sh" "$@"
 fi
 
 source "${REPO_ROOT}/scripts/lib/common.sh"

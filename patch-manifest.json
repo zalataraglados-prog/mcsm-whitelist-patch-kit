@@ -10,7 +10,7 @@
     "daemon": "mcsm-daemon.service"
   },
   "repo": {
-    "github": "__FILL_GITHUB_REPO__",
+    "github": "zalataraglados-prog/mcsm-whitelist-patch-kit",
     "tag": "__FILL_RELEASE_TAG__"
   },
   "files": [

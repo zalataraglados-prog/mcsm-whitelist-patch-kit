@@ -27,7 +27,7 @@ The installer auto-detects the MCSManager root from:
 ## Intended one-liner
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/__OWNER__/__REPO__/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install.sh | bash
 ```
 
 This works after:
