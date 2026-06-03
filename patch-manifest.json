@@ -11,7 +11,7 @@
   },
   "repo": {
     "github": "zalataraglados-prog/mcsm-whitelist-patch-kit",
-    "tag": "__FILL_RELEASE_TAG__"
+    "tag": "main"
   },
   "files": [
     "daemon/app.js",
