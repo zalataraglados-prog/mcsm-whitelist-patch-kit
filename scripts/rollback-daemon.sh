@@ -22,7 +22,8 @@ log "restoring daemon backup: ${BACKUP_DIR}"
 cp -a "${BACKUP_DIR}/daemon/app.js" "${ROOT_DIR}/daemon/app.js"
 cp -a "${BACKUP_DIR}/daemon/app.js.map" "${ROOT_DIR}/daemon/app.js.map"
 
-node --check "${ROOT_DIR}/daemon/app.js"
+NODE_BIN="$(detect_node_bin "${ROOT_DIR}")"
+"${NODE_BIN}" --check "${ROOT_DIR}/daemon/app.js"
 systemctl restart "$(service_name_daemon)"
 systemctl is-active --quiet "$(service_name_daemon)" || fail "daemon service inactive after rollback"
 

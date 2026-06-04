@@ -48,9 +48,10 @@ rm -rf "${ROOT_DIR}/web/public/assets"
 cp -a "${PAYLOAD_DIR}/web/public/assets" "${ROOT_DIR}/web/public/assets"
 
 log "syntax check"
-node --check "${ROOT_DIR}/daemon/app.js"
-node --check "$(find_panel_index_bundle "${ROOT_DIR}")"
-node --check "$(find_panel_mount_bundle "${ROOT_DIR}")"
+NODE_BIN="$(detect_node_bin "${ROOT_DIR}")"
+"${NODE_BIN}" --check "${ROOT_DIR}/daemon/app.js"
+"${NODE_BIN}" --check "$(find_panel_index_bundle "${ROOT_DIR}")"
+"${NODE_BIN}" --check "$(find_panel_mount_bundle "${ROOT_DIR}")"
 
 log "restarting services"
 restart_services

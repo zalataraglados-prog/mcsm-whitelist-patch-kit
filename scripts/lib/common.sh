@@ -145,6 +145,29 @@ ensure_runtime_tools() {
   require_cmd systemctl
 }
 
+detect_node_bin() {
+  local root="$1"
+  local daemon_service exec_path
+  daemon_service="$(service_name_daemon)"
+  exec_path="$(systemctl cat "$daemon_service" 2>/dev/null | sed -n 's/^ExecStart=//p' | awk 'NR==1{print $1}' || true)"
+  if [[ -n "${exec_path}" && -x "${exec_path}" ]]; then
+    printf '%s\n' "${exec_path}"
+    return 0
+  fi
+
+  if [[ -x "${root}/node" ]]; then
+    printf '%s\n' "${root}/node"
+    return 0
+  fi
+
+  if command -v node >/dev/null 2>&1; then
+    command -v node
+    return 0
+  fi
+
+  fail "unable to locate node runtime"
+}
+
 find_panel_index_bundle() {
   local root="$1"
   ls -1 "${root}/web/public/assets"/index-*.js 2>/dev/null | head -n 1

@@ -46,7 +46,8 @@ cp -a "${PAYLOAD_DIR}/daemon/app.js" "${ROOT_DIR}/daemon/app.js"
 cp -a "${PAYLOAD_DIR}/daemon/app.js.map" "${ROOT_DIR}/daemon/app.js.map"
 
 log "syntax check"
-node --check "${ROOT_DIR}/daemon/app.js"
+NODE_BIN="$(detect_node_bin "${ROOT_DIR}")"
+"${NODE_BIN}" --check "${ROOT_DIR}/daemon/app.js"
 
 log "restarting daemon service"
 systemctl restart "$(service_name_daemon)"
