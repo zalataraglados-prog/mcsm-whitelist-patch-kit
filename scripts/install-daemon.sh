@@ -13,8 +13,12 @@ if [[ ! -f "${REPO_ROOT}/patch-manifest.json" ]]; then
   TMP_DIR="$(mktemp -d)"
   trap 'rm -rf "${TMP_DIR}"' EXIT
   cd "${TMP_DIR}"
-  curl -fsSL "https://github.com/zalataraglados-prog/mcsm-whitelist-patch-kit/archive/refs/heads/main.tar.gz" -o repo.tar.gz
-  tar -xzf repo.tar.gz
+  if command -v git >/dev/null 2>&1; then
+    git clone --depth 1 --branch main "https://github.com/zalataraglados-prog/mcsm-whitelist-patch-kit.git" mcsm-whitelist-patch-kit-main
+  else
+    curl -fsSL "https://github.com/zalataraglados-prog/mcsm-whitelist-patch-kit/archive/refs/heads/main.tar.gz" -o repo.tar.gz
+    tar -xzf repo.tar.gz
+  fi
   exec bash "${TMP_DIR}/mcsm-whitelist-patch-kit-main/scripts/install-daemon.sh" "$@"
 fi
 
