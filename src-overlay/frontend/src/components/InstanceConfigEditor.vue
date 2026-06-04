@@ -20,7 +20,9 @@ const data:
   | undefined = configData[props.configName];
 
 const parsedConfig = jsonToMap(props.config);
-const isWhitelistConfig = props.configName === "common/whitelist.json" && props.config?.__mcsm_whitelist;
+const isWhitelistConfig =
+  props.configName === "common/whitelist.json" &&
+  (props.config?.__mcsm_whitelist || props.config?.data?.__mcsm_whitelist);
 </script>
 
 <template>

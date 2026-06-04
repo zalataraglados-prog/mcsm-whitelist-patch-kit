@@ -30,11 +30,7 @@ The installer auto-detects the MCSManager root from:
 curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install.sh | bash
 ```
 
-This works after:
-
-- payload build is completed
-- GitHub repo name is finalized
-- a release asset is published
+This installer bootstraps from the GitHub `main` branch tarball and applies the packaged payload in this repo.
 
 ## Build flow
 

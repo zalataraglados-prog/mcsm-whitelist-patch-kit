@@ -27,6 +27,7 @@ type WhitelistEntry = {
   id: string;
   name: string;
   uuid: string;
+  banned: boolean;
   source: string;
   offlineUuid: string;
   duplicateName: boolean;
@@ -61,10 +62,37 @@ function readWhitelistConfig(instance: Instance, filePath: string) {
   try {
     const rawText = fs.readFileSync(filePath, { encoding: "utf-8" });
     const parsed = JSON.parse(rawText);
-    if (parsed instanceof Array) rawList = parsed;
+    if (Array.isArray(parsed)) rawList = parsed;
   } catch (_err) {
     rawList = [];
   }
+
+  let bannedSet = new Set<string>();
+  try {
+    const bannedPlayersPath = path.normalize(
+      path.join(instance.absoluteCwdPath(), "banned-players.json")
+    );
+    if (fs.existsSync(bannedPlayersPath)) {
+      const bannedText = fs.readFileSync(bannedPlayersPath, { encoding: "utf-8" });
+      const bannedParsed = JSON.parse(bannedText);
+      if (Array.isArray(bannedParsed)) {
+        bannedSet = new Set(
+          bannedParsed.flatMap((item) => {
+            const values: string[] = [];
+            const bannedUuid = String(item?.uuid || "")
+              .trim()
+              .toLowerCase();
+            const bannedName = String(item?.name || "")
+              .trim()
+              .toLowerCase();
+            if (bannedUuid) values.push(`uuid:${bannedUuid}`);
+            if (bannedName) values.push(`name:${bannedName}`);
+            return values;
+          })
+        );
+      }
+    }
+  } catch (_err) {}
 
   let onlineMode: boolean | null = null;
   try {
@@ -106,6 +134,9 @@ function readWhitelistConfig(instance: Instance, filePath: string) {
     const effectiveOnline = !!uuid && !isOfflineUuid;
     const effectiveOffline = !!name && isOfflineUuid;
     const effectiveCurrent = onlineMode == null ? null : onlineMode ? effectiveOnline : effectiveOffline;
+    const banned =
+      (!!uuid && bannedSet.has(`uuid:${uuid}`)) ||
+      (!!name && bannedSet.has(`name:${name.toLowerCase()}`));
 
     let source = "未知";
     if (isOfflineUuid) source = "离线派生 UUID";
@@ -120,6 +151,7 @@ function readWhitelistConfig(instance: Instance, filePath: string) {
       id: `${index}:${uuid || name || "empty"}`,
       name,
       uuid,
+      banned,
       source,
       offlineUuid,
       duplicateName,
@@ -137,12 +169,36 @@ function readWhitelistConfig(instance: Instance, filePath: string) {
   };
 }
 
-function writeWhitelistConfig(filePath: string, payload: Record<string, any>) {
-  const sourceEntries = payload?.entries instanceof Array ? payload.entries : [];
+function writeWhitelistConfig(instance: Instance, filePath: string, payload: Record<string, any>) {
+  const sourceEntries = Array.isArray(payload?.entries) ? payload.entries : [];
+  let onlineMode = true;
+  try {
+    const serverPropertiesPath = path.normalize(
+      path.join(instance.absoluteCwdPath(), "server.properties")
+    );
+    if (fs.existsSync(serverPropertiesPath)) {
+      const serverPropertiesConfig = new ProcessConfig({
+        fileName: "server.properties",
+        redirect: "server.properties",
+        path: serverPropertiesPath,
+        type: "properties",
+        info: null,
+        fromLink: null
+      });
+      const serverProperties = serverPropertiesConfig.read();
+      onlineMode = !(
+        serverProperties?.["online-mode"] === false ||
+        String(serverProperties?.["online-mode"]).toLowerCase() === "false"
+      );
+    }
+  } catch (_err) {}
   const rawList: { name: string; uuid: string }[] = [];
   for (const item of sourceEntries) {
     const name = String(item?.name || "").trim();
-    const uuid = String(item?.uuid || "").trim().toLowerCase();
+    let uuid = String(item?.uuid || "").trim().toLowerCase();
+    if (!uuid && name && !onlineMode) {
+      uuid = createOfflineUuid(name).toLowerCase();
+    }
     if (!name && !uuid) continue;
     rawList.push({ name, uuid });
   }
@@ -670,7 +726,7 @@ routerApp.on("instance/process_config/file", (ctx, data) => {
     const filePath = path.normalize(path.join(instance.absoluteCwdPath(), fileName));
     if (fileName === "whitelist.json") {
       if (config) {
-        writeWhitelistConfig(filePath, config);
+        writeWhitelistConfig(instance, filePath, config);
         return protocol.response(ctx, true);
       }
       return protocol.response(ctx, readWhitelistConfig(instance, filePath));

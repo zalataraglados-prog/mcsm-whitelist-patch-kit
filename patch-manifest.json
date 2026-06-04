@@ -1,6 +1,6 @@
 {
   "patch_id": "mcsm-whitelist-table",
-  "patch_version": "0.1.0",
+  "patch_version": "0.1.1",
   "target_panel_version": "10.16.1",
   "target_daemon_version": "4.16.1",
   "payload_dir": "payload/v10.16.1",
