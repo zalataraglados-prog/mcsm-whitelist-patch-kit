@@ -13,8 +13,11 @@ Patch kit for `MCSManager 10.16.1 / Daemon 4.16.1`.
 - `src-overlay/`: source-level patch overlay applied onto upstream `MCSManager v10.16.1`
 - `payload/v10.16.1/`: built production files copied by `scripts/package.sh`
 - `scripts/install.sh`: production installer
+- `scripts/install.ps1`: Windows production installer
 - `scripts/rollback.sh`: rollback latest backup
+- `scripts/rollback.ps1`: Windows rollback latest backup
 - `scripts/healthcheck.sh`: patch verification
+- `scripts/healthcheck.ps1`: Windows patch verification
 
 ## Production install target
 
@@ -24,20 +27,34 @@ The installer auto-detects the MCSManager root from:
 2. `systemctl cat mcsm-daemon.service`
 3. Common fallback directories such as `/opt/mcsmanager`
 
-## Intended one-liner
+## Intended one-liners
 
+Linux panel host:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install.sh | bash
 ```
 
-This installer bootstraps from the GitHub `main` branch tarball and applies the packaged payload in this repo.
+Windows panel host:
+
+```powershell
+curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
+```
+
+Both installers bootstrap from the GitHub `main` branch and apply the packaged payload in this repo.
 
 ## Daemon-only one-liner
 
-For remote game nodes where you only want the patched daemon:
+For remote game nodes where you only want the patched daemon.
 
+Linux game node:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install-daemon.sh | bash
+```
+
+Windows game node:
+
+```powershell
+curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install-daemon.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
 ```
 
 ## Build flow
