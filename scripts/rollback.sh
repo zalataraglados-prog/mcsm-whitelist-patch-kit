@@ -21,6 +21,8 @@ rm -rf "${ROOT_DIR}/web/public/assets"
 cp -a "${BACKUP_DIR}/web/public/assets" "${ROOT_DIR}/web/public/assets"
 
 restart_services
-bash "${REPO_ROOT}/scripts/healthcheck.sh" --root "${ROOT_DIR}"
+node --check "${ROOT_DIR}/daemon/app.js"
+node --check "$(find_panel_index_bundle "${ROOT_DIR}")"
+node --check "$(find_panel_mount_bundle "${ROOT_DIR}")"
 
 log "rollback complete"
