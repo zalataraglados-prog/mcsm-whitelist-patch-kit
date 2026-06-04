@@ -32,6 +32,14 @@ curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-
 
 This installer bootstraps from the GitHub `main` branch tarball and applies the packaged payload in this repo.
 
+## Daemon-only one-liner
+
+For remote game nodes where you only want the patched daemon:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install-daemon.sh | bash
+```
+
 ## Build flow
 
 1. Start from upstream `MCSManager v10.16.1`
