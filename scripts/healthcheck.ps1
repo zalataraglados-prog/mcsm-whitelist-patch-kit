@@ -1,9 +1,9 @@
-Set-StrictMode -Version Latest
-$ErrorActionPreference = "Stop"
-
 param(
   [string]$Root = ""
 )
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
 
 $ScriptPath = if ($PSCommandPath) { $PSCommandPath } else { $MyInvocation.MyCommand.Path }
 $ScriptDir = Split-Path -Parent $ScriptPath
@@ -37,4 +37,3 @@ foreach ($role in @("web", "daemon")) {
 }
 
 Write-Log "healthcheck ok"
-
