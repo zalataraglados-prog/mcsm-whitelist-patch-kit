@@ -1,9 +1,20 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$ScriptPath = if ($PSCommandPath) { $PSCommandPath } else { $MyInvocation.MyCommand.Path }
-$ScriptDir = Split-Path -Parent $ScriptPath
-$RepoRoot = Split-Path -Parent $ScriptDir
+$ScriptPath = $null
+if ($PSCommandPath) {
+  $ScriptPath = $PSCommandPath
+} elseif ($MyInvocation.MyCommand -and $MyInvocation.MyCommand.Path) {
+  $ScriptPath = $MyInvocation.MyCommand.Path
+}
+
+if ($ScriptPath) {
+  $ScriptDir = Split-Path -Parent $ScriptPath
+  $RepoRoot = Split-Path -Parent $ScriptDir
+} else {
+  $ScriptDir = (Get-Location).Path
+  $RepoRoot = Split-Path -Parent $ScriptDir
+}
 
 if (-not (Test-Path -LiteralPath (Join-Path $RepoRoot "patch-manifest.json"))) {
   $tmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("mcsm-whitelist-patch-kit-" + [guid]::NewGuid().ToString("N"))
@@ -71,4 +82,3 @@ Write-Log "running healthcheck"
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $RepoRoot "scripts\healthcheck.ps1") -Root $RootDir
 
 Write-Log "install complete"
-
