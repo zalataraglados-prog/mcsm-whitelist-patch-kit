@@ -251,11 +251,37 @@ function Get-ServiceNameForRole {
   return $service.Name
 }
 
+function Get-ServiceWrapperExecutable {
+  param([ValidateSet("web", "daemon")] [string]$Role)
+
+  $service = Find-ServiceRecord -Role $Role
+  if ($null -eq $service) {
+    return $null
+  }
+
+  $exe = Get-ServiceExecutablePath -PathName $service.PathName
+  if ([string]::IsNullOrWhiteSpace($exe) -or -not (Test-Path -LiteralPath $exe)) {
+    return $null
+  }
+
+  $baseName = [System.IO.Path]::GetFileName($exe)
+  if ($baseName -match '^(mcsm-|winsw)') {
+    return $exe
+  }
+
+  return $null
+}
+
 function Restart-RoleService {
   param([ValidateSet("web", "daemon")] [string]$Role)
 
   $serviceName = Get-ServiceNameForRole -Role $Role
-  Restart-Service -Name $serviceName -Force
+  $wrapperExe = Get-ServiceWrapperExecutable -Role $Role
+  if ($wrapperExe) {
+    & $wrapperExe restart | Out-Null
+  } else {
+    Restart-Service -Name $serviceName -Force
+  }
   Start-Sleep -Seconds 2
   $status = (Get-Service -Name $serviceName).Status
   if ($status -ne "Running") {
