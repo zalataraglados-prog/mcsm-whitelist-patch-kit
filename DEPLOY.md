@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-
 
 Windows Server 命令：
 ```powershell
-curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
+curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/8626f7b/scripts/install.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
 ```
 
 ### 2. 游戏节点安装 daemon 补丁
@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-
 
 Windows Server 命令：
 ```powershell
-curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install-daemon.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
+curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/8626f7b/scripts/install-daemon.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
 ```
 
 ---
@@ -246,6 +246,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rollback-daemon.ps
 - 自动探测安装目录
 - 自动探测服务名与 `node.exe`
 - 完成备份、覆盖、重启、健康检查
+
+当前补充说明：
+
+- Windows 一键命令临时固定到提交 `8626f7b`
+- 原因是 `raw.githubusercontent.com` 对 `main` 分支脚本存在缓存延迟
+- 脚本仓库仍然在 GitHub `main` 上维护，只是入口先固定到已验证提交
 
 ### 4. 自动探测失败时怎么处理
 

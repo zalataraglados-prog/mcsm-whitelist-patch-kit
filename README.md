@@ -37,7 +37,7 @@ curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-
 Windows panel host:
 
 ```powershell
-curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
+curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/8626f7b/scripts/install.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
 ```
 
 Both installers bootstrap from the GitHub `main` branch and apply the packaged payload in this repo.
@@ -54,8 +54,13 @@ curl -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-
 Windows game node:
 
 ```powershell
-curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/main/scripts/install-daemon.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
+curl.exe -fsSL https://raw.githubusercontent.com/zalataraglados-prog/mcsm-whitelist-patch-kit/8626f7b/scripts/install-daemon.ps1 | powershell -NoProfile -ExecutionPolicy Bypass -Command -
 ```
+
+Temporary note:
+
+- Windows one-liners currently pin commit `8626f7b` to avoid `raw.githubusercontent.com` branch-cache lag on `main`.
+- Linux one-liners remain on `main`.
 
 ## Build flow
 
