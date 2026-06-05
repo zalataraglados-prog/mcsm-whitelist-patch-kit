@@ -277,20 +277,27 @@ function Ensure-RuntimeTools {
 function Get-NodeBin {
   param([string]$Root)
 
-  $service = Find-ServiceRecord -Role "daemon"
-  if ($null -ne $service) {
-    $exe = Get-ServiceExecutablePath -PathName $service.PathName
-    if (-not [string]::IsNullOrWhiteSpace($exe) -and (Test-Path -LiteralPath $exe)) {
-      return $exe
-    }
-  }
-
   foreach ($candidate in @(
+    (Join-Path $Root "daemon\node_app.exe"),
+    (Join-Path $Root "web\node_app.exe"),
     (Join-Path $Root "node.exe"),
     (Join-Path $Root "node")
   )) {
     if (Test-Path -LiteralPath $candidate) {
       return $candidate
+    }
+  }
+
+  $service = Find-ServiceRecord -Role "daemon"
+  if ($null -ne $service) {
+    $exe = Get-ServiceExecutablePath -PathName $service.PathName
+    $baseName = if (-not [string]::IsNullOrWhiteSpace($exe)) { [System.IO.Path]::GetFileName($exe) } else { "" }
+    if (
+      -not [string]::IsNullOrWhiteSpace($exe) -and
+      (Test-Path -LiteralPath $exe) -and
+      $baseName -notmatch '^(mcsm-|winsw)'
+    ) {
+      return $exe
     }
   }
 

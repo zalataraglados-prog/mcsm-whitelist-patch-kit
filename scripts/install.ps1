@@ -4,8 +4,11 @@ $ErrorActionPreference = "Stop"
 $ScriptPath = $null
 if ($PSCommandPath) {
   $ScriptPath = $PSCommandPath
-} elseif ($MyInvocation.MyCommand -and $MyInvocation.MyCommand.Path) {
-  $ScriptPath = $MyInvocation.MyCommand.Path
+} elseif ($MyInvocation.MyCommand) {
+  $pathProperty = $MyInvocation.MyCommand.PSObject.Properties["Path"]
+  if ($pathProperty -and $pathProperty.Value) {
+    $ScriptPath = [string]$pathProperty.Value
+  }
 }
 
 if ($ScriptPath) {
